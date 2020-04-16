@@ -1,0 +1,24 @@
+{
+  "name": "acnh-telegram-bot-helper",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "node-telegram-bot-api": "^0.40.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ValKiriann/ACNH-telegram-bot-helper.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ValKiriann/ACNH-telegram-bot-helper/issues"
+  },
+  "homepage": "https://github.com/ValKiriann/ACNH-telegram-bot-helper#readme"
+}
