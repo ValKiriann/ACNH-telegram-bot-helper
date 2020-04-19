@@ -52,3 +52,21 @@ exports.get = (params, table) => {
         });
     })
 }
+
+exports.query = (params) => {
+    var docClient = new AWS.DynamoDB.DocumentClient();
+    return new Promise((resolve, reject) => {
+        docClient.query(params, function(err, data) {
+            if (err) {
+                console.error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2));
+                reject (`Hubo un error al pedir la lista`);
+            } else {
+                console.log("GetItem succeeded:", JSON.stringify(data, null, 2));
+                if(!data.Items) {
+                    reject('No document found');
+                }
+                resolve(data.Items) 
+            }
+        });
+    })
+}

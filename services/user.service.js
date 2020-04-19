@@ -1,6 +1,6 @@
 const dynamodbService = require('./dynamodb.service');
 
-exports.checkUser = (userId) => {
+exports.getUser = (userId) => {
     return dynamodbService.get({"chat_id": userId}, 'users')
         .catch((err) => {
             if(err == "No document found") {

@@ -11,7 +11,8 @@ AWS.config.secretAccessKey = process.env.SP_AWS_SECRET_ACCESS_KEY;
 
 const dynamodbService = require('./services/dynamodb.service');
 const textService = require('./services/text.service');
-const usersService = require('./services/users.service');
+const usersService = require('./services/user.service');
+const messageService = require('./services/message.service');
 
 bot.onText(/^\/venta/, function(msg){
     // comprobar que es un numero y si no pasar
@@ -72,7 +73,7 @@ bot.onText(/^\/compra/, function(msg){
     let userId = msg.from.id;
     let amount;
 
-    return usersService.checkUser(userId)
+    return usersService.getUser(userId)
         .then((userData) => {
             amount = Number(textService.cleanCommand(msg.text));
             if(!Number.isInteger(amount)){
@@ -100,51 +101,38 @@ bot.onText(/^\/compra/, function(msg){
 });
 
 bot.onText(/^\/dondeComprar/, function(msg){
-    // comprobar que es un numero y si no pasar
-    // comprobar la hora
     var chatId = msg.chat.id;
-    let name = msg.from.first_name;
-    let username = msg.from.username;
-    
-    AWS.config.update({
-        region: "eu-west-1",
-        endpoint: "https://dynamodb.eu-west-1.amazonaws.com"
-    });
-    var docClient = new AWS.DynamoDB.DocumentClient();
-    var table = "prices-2";
-    let today = new Date();
+    let userId = msg.from.id
+    let user;
 
-    var params = {
-        TableName: table,
-        KeyConditionExpression: "#dt = :dddd",
-        ExpressionAttributeNames:{
-            "#dt": "date"
-        },
-        ExpressionAttributeValues: {
-            ":dddd": dateFormat(today, "dd/mm/yyyy")
-        }
-    };
-
-    docClient.query(params, function(err, data) {
-        if (err) {
-            console.error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2));
-            bot.sendMessage(chatId, `${name} hubo un error`);
-        } else {
-            console.log("GetItem succeeded:", JSON.stringify(data, null, 2));
-            data = data.Items
-            if(data.length == 0) {
-                bot.sendMessage(chatId, "Todavía no tengo precios de compra para hoy!");
-            }else {
-                let text = `${name} estos son los precios de compra: `
-                for(i=0;i<data.length;i++) {
-                    text = text + `\n - ${data[i].username}: ${data[i].purchase} `
+    return usersService.getUser(userId)
+        .then((userData) => {
+            user = userData;
+            let today = new Date();
+            let params = {
+                TableName: 'prices',
+                KeyConditionExpression: "#dt = :dddd",
+                ExpressionAttributeNames: {
+                    "#dt":"date"
+                },
+                ExpressionAttributeValues: {
+                    ":dddd": dateFormat(today, "dd/mm/yyyy")
                 }
-                bot.sendMessage(chatId, text);
             }
-                
-        }
-    });
-
+            return dynamodbService.query(params)
+        })
+        .then(async(itemList) => {
+            let title = `${user.displayName} estos son los precios de compra:`;
+            let composeMessage = await messageService.listPrices(itemList);
+            return bot.sendMessage(userId, title + composeMessage);
+        })
+        .catch((err) => {
+            console.log(err)
+            if(err.errorTitle) {
+                return bot.sendMessage(userId, err.errorMessage);
+            }
+            return bot.sendMessage(userId, `Lo lamento, hubo un error al pedir la lista`);
+        })   
 });
 
 bot.onText(/^\/start/, function(msg){
