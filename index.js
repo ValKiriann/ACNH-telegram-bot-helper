@@ -168,7 +168,7 @@ bot.onText(/^\/start/, function(msg){
     let name = msg.from.first_name;
     let username = msg.from.username;
     
-    bot.sendMessage(msg.chat.id, `Hola! Soy la versión 0.0.1 del nuevo Bot de comercio de nabos de @Annilou & @adrianlorenzo
+    bot.sendMessage(msg.chat.id, `Hola! Soy la versión 0.0.1 del nuevo Bot de comercio de nabos de @Annilou & @MercTISsue
         \n Para añadir un precio de compra de nabos los domingos usa el comando /compra precio
         \n Ej: /compra 96
         \n Para ver la lista de precios de compra actualizada usa /dondeComprar`);
