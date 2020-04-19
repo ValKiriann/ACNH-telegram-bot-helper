@@ -9,6 +9,8 @@ AWS.config = new AWS.Config();
 AWS.config.accessKeyId = process.env.SP_AWS_ACCESS_KEY_ID;
 AWS.config.secretAccessKey = process.env.SP_AWS_SECRET_ACCESS_KEY;
 
+const dynamodbService = require('./services/dynamodb.service');
+
 bot.onText(/^\/venta/, function(msg){
     // comprobar que es un numero y si no pasar
     // comprobar la hora
@@ -72,7 +74,6 @@ bot.onText(/^\/compra/, function(msg){
     let message = msg.text;
     message = Number(message.replace("/compra ", ""));
     let date = msg.date;
-    console.log(JSON.stringify(msg));
     try {
         console.log(message)
         if(Number.isInteger(message)) {
@@ -169,57 +170,34 @@ bot.onText(/^\/start/, function(msg){
     let name = msg.from.first_name;
     let username = msg.from.username;
     
-    bot.sendMessage(msg.chat.id, `Hola! Soy la versión 0.0.1 del nuevo Bot de comercio de nabos de @Annilou & @MercTISsue
-        \n Para añadir un precio de compra de nabos los domingos usa el comando /compra precio
-        \n Ej: /compra 96
-        \n Para ver la lista de precios de compra actualizada usa /dondeComprar`);
+    bot.sendMessage(msg.chat.id, `Hola! Soy la versión 0.1.0 del nuevo Bot de comercio de nabos de @Annilou & @MercTISsue
+        \n Para empezar regístrate usando el comando /registro
+        \n Después usa /help para ver la lista de comandos disponibles`);
 });
 
 bot.onText(/^\/registro/, function(msg){
-    // comprobar que es un numero y si no pasar
-    // comprobar la hora
-    console.log(JSON.stringify(msg))
-    console.log(groupId)
-    var chatId = msg.chat.id;
-    if(chatId != msg.from.id) {
-        return bot.sendMessage(chatId, `Lo siento, sólo puedes registrarte por privado!`);
+    const chatId = msg.chat.id;
+    const userId = msg.from.id;
+    if(chatId != userId) {
+        return botsService.sendMessage(chatId, `Lo siento, sólo puedes registrarte por privado!`);
     }
     bot.getChatMember(groupId, chatId)
         .then((chatMember) => {
             if(chatMember.status != "creator" && chatMember.status != "member") {
-                return bot.sendMessage(msg.chat.id, `Lo siento, sólo los miembros del club selecto pueden registrarse conmigo`);
+                return bot.sendMessage(chatId, `Lo siento, sólo los miembros del club selecto pueden registrarse conmigo`);
             }
             let username = msg.from.username ? msg.from.username : "";
-            AWS.config.update({
-                region: "eu-west-1",
-                endpoint: "https://dynamodb.eu-west-1.amazonaws.com",
-            });
-            var docClient = new AWS.DynamoDB.DocumentClient();
-            var today = new Date()
-            var params = {
-                TableName: "users",
-                Item: {
-                    "chat_id": chatId,
-                    username,
-                    "displayName": chatMember.user.first_name
-                }
-            };
-            try {
-                docClient.put(params, function(err, data) {
-                    if (err) {
-                        console.error("Unable to create user", message, ". Error JSON:", JSON.stringify(err, null, 2));
-                        bot.sendMessage(chatId, `${params.Item.displayName} hubo un error al crearte el usuario`);
-                    } else {
-                        console.log("create user succeeded:", params.Item.chat_id);
-                        bot.sendMessage(chatId, `${params.Item.displayName}, te has registrado con éxito`);
-                    }
-                    });
-            } catch (error) {
-                console.log(error)
+            let params = {
+                "chat_id": chatId,
+                username,
+                "displayName": chatMember.user.first_name
             }
+            return dynamodbService.put(params, 'users')
         })
-        .catch(err => console.error(err));
-
-    
-    
+        .then((onInsert) => {
+            return bot.sendMessage(chatId, `${params.displayName} te has registrado con éxito`);
+        })
+        .catch((err) => {
+            return bot.sendMessage(chatId, `${params.displayName} hubo un error al crearte el usuario`);
+        })    
 });
