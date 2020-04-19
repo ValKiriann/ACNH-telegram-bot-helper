@@ -3,6 +3,7 @@ const TelegramBot = require('node-telegram-bot-api');
 const AWS = require('aws-sdk');
 const dateFormat = require('dateformat');
 const token = process.env.TELEGRAM_BOT_TOKEN;
+const groupId = process.env.GROUP_ID;
 const bot = new TelegramBot(token, {polling: true});
 AWS.config = new AWS.Config();
 AWS.config.accessKeyId = process.env.SP_AWS_ACCESS_KEY_ID;
@@ -174,11 +175,51 @@ bot.onText(/^\/start/, function(msg){
         \n Para ver la lista de precios de compra actualizada usa /dondeComprar`);
 });
 
-/*
-bot.on('message', function(msg){
-    console.log(msg);
+bot.onText(/^\/registro/, function(msg){
+    // comprobar que es un numero y si no pasar
+    // comprobar la hora
+    console.log(JSON.stringify(msg))
+    console.log(groupId)
     var chatId = msg.chat.id;
-    // send a message to the chat acknowledging receipt of their message
-    bot.sendMessage(chatId, 'Received your message');
+    if(chatId != msg.from.id) {
+        return bot.sendMessage(chatId, `Lo siento, sólo puedes registrarte por privado!`);
+    }
+    bot.getChatMember(groupId, chatId)
+        .then((chatMember) => {
+            if(chatMember.status != "creator" && chatMember.status != "member") {
+                return bot.sendMessage(msg.chat.id, `Lo siento, sólo los miembros del club selecto pueden registrarse conmigo`);
+            }
+            let username = msg.from.username ? msg.from.username : "";
+            AWS.config.update({
+                region: "eu-west-1",
+                endpoint: "https://dynamodb.eu-west-1.amazonaws.com",
+            });
+            var docClient = new AWS.DynamoDB.DocumentClient();
+            var today = new Date()
+            var params = {
+                TableName: "users",
+                Item: {
+                    "chat_id": chatId,
+                    username,
+                    "displayName": chatMember.user.first_name
+                }
+            };
+            try {
+                docClient.put(params, function(err, data) {
+                    if (err) {
+                        console.error("Unable to create user", message, ". Error JSON:", JSON.stringify(err, null, 2));
+                        bot.sendMessage(chatId, `${params.Item.displayName} hubo un error al crearte el usuario`);
+                    } else {
+                        console.log("create user succeeded:", params.Item.chat_id);
+                        bot.sendMessage(chatId, `${params.Item.displayName}, te has registrado con éxito`);
+                    }
+                    });
+            } catch (error) {
+                console.log(error)
+            }
+        })
+        .catch(err => console.error(err));
+
+    
+    
 });
-*/
