@@ -15,11 +15,11 @@ exports.put = (params, table) => {
         return new Promise((resolve, reject) => {
             docClient.put(putParams, function(err, data) {
                 if (err) {
-                    console.error("Unable to create document", message, ". Error JSON:", JSON.stringify(err, null, 2));
+                    console.error("Unable to create document", ". Error JSON:", JSON.stringify(err, null, 2));
                     reject (JSON.stringify(err, null, 2));
                 } else {
                     console.log("Document created:", params.chat_id);
-                    resolve ('Document created');
+                    resolve (params);
                 }
             });
         })
