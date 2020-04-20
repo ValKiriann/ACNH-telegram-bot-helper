@@ -80,7 +80,7 @@ bot.onText(/^\/dondeVender/, function(msg){
     var chatId = msg.chat.id;
     let userId = msg.from.id
     let user;
-    let hour = new Date().getHours();
+    let hour = new Date().getHours() + process.env.TIMEZONE;
     let field = hour < 12 ? "morning" : "evening"
 
     return usersService.getUser(userId)
