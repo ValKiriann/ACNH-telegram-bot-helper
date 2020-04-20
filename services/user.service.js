@@ -6,6 +6,7 @@ exports.getUser = (userId) => {
             if(!Object.keys(user).length) {
                 throw "No user found"
             }
+            return user;
         })
         .catch((err) => {
             //TODO: change error to promise resolve empty documents
