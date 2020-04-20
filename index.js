@@ -68,9 +68,9 @@ bot.onText(/^\/venta/, function(msg){
             return bot.sendMessage(userId, `Has añadido ${amount} como tu precio de compra para hoy en el turno de ${message[field]} `);
         })
         .catch((err) => {
-            console.log(err)
             if(err.errorTitle) {
-                return bot.sendMessage(userId, err.errorMessage);
+                let response = err.errorTitle == "access_denied" ? chatId : userId;
+                return bot.sendMessage(response, err.errorMessage);
             }
             return bot.sendMessage(userId, `hubo un error al añadir el precio de compra`);
         })   
@@ -114,9 +114,9 @@ bot.onText(/^\/dondeVender/, function(msg){
             return bot.sendMessage(userId, "Todavía no hay precios de venta para el turno actual");
         })
         .catch((err) => {
-            console.log(err)
             if(err.errorTitle) {
-                return bot.sendMessage(userId, err.errorMessage);
+                let response = err.errorTitle == "access_denied" ? chatId : userId;
+                return bot.sendMessage(response, err.errorMessage);
             }
             return bot.sendMessage(userId, `Lo lamento, hubo un error al pedir la lista`);
         })   
@@ -146,9 +146,9 @@ bot.onText(/^\/compra/, function(msg){
             return bot.sendMessage(userId, `Has añadido ${amount} como tu precio de compra para hoy`);
         })
         .catch((err) => {
-            console.log(err)
             if(err.errorTitle) {
-                return bot.sendMessage(userId, err.errorMessage);
+                let response = err.errorTitle == "access_denied" ? chatId : userId;
+                return bot.sendMessage(response, err.errorMessage);
             }
             return bot.sendMessage(userId, `hubo un error al añadir el precio de compra`);
         })   
@@ -190,24 +190,44 @@ bot.onText(/^\/dondeComprar/, function(msg){
             return bot.sendMessage(userId, "Hoy todavía no tengo datos de compra");
         })
         .catch((err) => {
-            console.log(err)
             if(err.errorTitle) {
-                return bot.sendMessage(userId, err.errorMessage);
+                let response = err.errorTitle == "access_denied" ? chatId : userId;
+                return bot.sendMessage(response, err.errorMessage);
             }
             return bot.sendMessage(userId, `Lo lamento, hubo un error al pedir la lista`);
         })   
 });
 
 bot.onText(/^\/start/, function(msg){
-    // comprobar que es un numero y si no pasar
-    // comprobar la hora
     var chatId = msg.chat.id;
-    let name = msg.from.first_name;
-    let username = msg.from.username;
     
     bot.sendMessage(msg.chat.id, `Hola! Soy la versión 0.1.0 del nuevo Bot de comercio de nabos de @Annilou & @MercTISsue
         \n Para empezar regístrate usando el comando /registro
         \n Después usa /help para ver la lista de comandos disponibles`);
+});
+
+bot.onText(/^\/help/, function(msg){
+    var chatId = msg.chat.id;
+    let userId = msg.from.id
+
+    return usersService.getUser(userId)
+        .then((userData) => {
+            //TODO: format
+            bot.sendMessage(msg.chat.id, `Aquí tienes la lista de comandos disponibles:
+                \n /venta <Number>: Añadir un precio de venta en tu isla (calcula automáticamente a que turno pertenece)
+                \n /dondeVender: Muestra la lista de precios para vender hoy en el turno actual
+                \n /compra <Number>: Añadir un precio de compra en tu isla
+                \n /dondeComprar: Muestra la lista de precios de compra para hoy
+                `);
+        })
+        .catch((err) => {
+            console.log(err)
+            if(err.errorTitle) {
+                let response = err.errorTitle == "access_denied" ? chatId : userId;
+                return bot.sendMessage(response, err.errorMessage);
+            }
+            return bot.sendMessage(userId, `Lo lamento, hubo un error al pedir la lista`);
+        })  
 });
 
 bot.onText(/^\/registro/, function(msg){
