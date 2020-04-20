@@ -23,6 +23,7 @@ bot.onText(/^\/venta/, function(msg){
         "morning": "mañana",
         "evening": "tarde"
     }
+    //TODO: meter esto en una función
     let hour = new Date(msg.date).getHours();
     let field = hour < 12 ? "morning" : "evening"
     let date = dateFormat(new Date(), "dd/mm/yyyy");
@@ -72,6 +73,52 @@ bot.onText(/^\/venta/, function(msg){
                 return bot.sendMessage(userId, err.errorMessage);
             }
             return bot.sendMessage(userId, `hubo un error al añadir el precio de compra`);
+        })   
+});
+
+bot.onText(/^\/dondeVender/, function(msg){
+    var chatId = msg.chat.id;
+    let userId = msg.from.id
+    let user;
+    let hour = new Date().getHours();
+    let field = hour < 12 ? "morning" : "evening"
+
+    return usersService.getUser(userId)
+        .then((userData) => {
+            if(new Date().getDay() == 0) {
+                throw {"errorTitle": "is sunday", "errorMessage": `Hoy no se puede vender 😘`};
+            }
+            user = userData;
+            let date = dateFormat(new Date(), "dd/mm/yyyy");
+            let params = {
+                TableName: 'prices',
+                KeyConditionExpression: "#dt = :dddd",
+                ExpressionAttributeNames: {
+                    "#dt":"date",
+                    "#f": field
+                },
+                FilterExpression:"attribute_exists(#f)",
+                ExpressionAttributeValues: {
+                    ":dddd": date
+                    
+                }
+            }
+            return dynamodbService.query(params)
+        })
+        .then(async(itemList) => {
+            if(itemList.length) {
+                let title = `Estos son los precios de venta:`;
+                let composeMessage = await messageService.listPrices(itemList, field);
+                return bot.sendMessage(userId, title + composeMessage);
+            }
+            return bot.sendMessage(userId, "Todavía no hay precios de venta para el turno actual");
+        })
+        .catch((err) => {
+            console.log(err)
+            if(err.errorTitle) {
+                return bot.sendMessage(userId, err.errorMessage);
+            }
+            return bot.sendMessage(userId, `Lo lamento, hubo un error al pedir la lista`);
         })   
 });
 
@@ -136,8 +183,8 @@ bot.onText(/^\/dondeComprar/, function(msg){
         })
         .then(async(itemList) => {
             if(itemList.length) {
-                let title = `${user.displayName} estos son los precios de compra:`;
-                let composeMessage = await messageService.listPrices(itemList);
+                let title = `Estos son los precios de compra:`;
+                let composeMessage = await messageService.listPrices(itemList, "purchase");
                 return bot.sendMessage(userId, title + composeMessage);
             }
             return bot.sendMessage(userId, "Hoy todavía no tengo datos de compra");
