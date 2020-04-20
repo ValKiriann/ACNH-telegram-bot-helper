@@ -8,21 +8,18 @@ const bot = new TelegramBot(token, {polling: true});
 AWS.config = new AWS.Config();
 AWS.config.accessKeyId = process.env.SP_AWS_ACCESS_KEY_ID;
 AWS.config.secretAccessKey = process.env.SP_AWS_SECRET_ACCESS_KEY;
+const pricesTable = process.env.PRICES_TABLE;
+const usersTable = process.env.USERS_TABLE;
 
 const dynamodbService = require('./services/dynamodb.service');
 const textService = require('./services/text.service');
 const usersService = require('./services/user.service');
-const messageService = require('./services/message.service');
+const template = require('./resources/template.resource');
 
-bot.onText(/^\/venta/, function(msg){
+bot.onText(template.commands.sellPrice, function(msg){
     let chatId = msg.chat.id;
     let userId = msg.from.id;
     let amount;
-    let table = "prices";
-    let message = {
-        "morning": "mañana",
-        "evening": "tarde"
-    }
     //TODO: meter esto en una función
     let hour = new Date().getHours() + process.env.TIMEZONE;
     let field = hour < 12 ? "morning" : "evening"
@@ -31,18 +28,14 @@ bot.onText(/^\/venta/, function(msg){
         .then((userData) => {
             amount = Number(textService.cleanCommand(msg.text));
             if(!Number.isInteger(amount)){
-                throw {"errorTitle": "invalid data", "errorMessage": `Por favor, introduce un número después del comando`};
+                throw {"errorTitle": "invalid data", "errorMessage": template.errors.invalid_data};
             }
-            let params = {
-                date,
-                "chat_id": chatId
-            }
-            return dynamodbService.get(params, table)            
+            return dynamodbService.get({date, "chat_id":chatId}, pricesTable)            
         })
         .then((exists) => {
             if(Object.keys(exists).length) {
                 var params = {
-                    TableName:table,
+                    TableName: pricesTable,
                     Key:{
                         date,
                         "chat_id": userId
@@ -61,37 +54,35 @@ bot.onText(/^\/venta/, function(msg){
                     "chat_id": userId,
                 }
                 params[field] = amount
-                return dynamodbService.put(params, table)
+                return dynamodbService.put(params, pricesTable)
             }
         })
         .then((document) => {
-            return bot.sendMessage(userId, `Has añadido ${amount} como tu precio de compra para hoy en el turno de ${message[field]} `);
+            return bot.sendMessage(userId, template.sellPriceResponse(amount, template.sellTurns[field]));
         })
         .catch((err) => {
             if(err.errorTitle) {
                 let response = err.errorTitle == "access_denied" ? chatId : userId;
                 return bot.sendMessage(response, err.errorMessage);
             }
-            return bot.sendMessage(userId, `hubo un error al añadir el precio de compra`);
+            return bot.sendMessage(userId, template.errors.sellPriceError);
         })   
 });
 
-bot.onText(/^\/dondeVender/, function(msg){
+bot.onText(template.commands.sellingList, function(msg){
     var chatId = msg.chat.id;
     let userId = msg.from.id
-    let user;
     let hour = new Date().getHours() + process.env.TIMEZONE;
-    let field = hour < 12 ? "morning" : "evening"
+    let field = hour < 12 ? "morning" : "evening";
 
     return usersService.getUser(userId)
         .then((userData) => {
             if(new Date().getDay() == 0) {
-                throw {"errorTitle": "is sunday", "errorMessage": `Hoy no se puede vender 😘`};
+                throw {"errorTitle": "is_sunday", "errorMessage": template.errors.is_sunday};
             }
-            user = userData;
             let date = dateFormat(new Date(), "dd/mm/yyyy");
             let params = {
-                TableName: 'prices',
+                TableName: pricesTable,
                 KeyConditionExpression: "#dt = :dddd",
                 ExpressionAttributeNames: {
                     "#dt":"date",
@@ -107,22 +98,22 @@ bot.onText(/^\/dondeVender/, function(msg){
         })
         .then(async(itemList) => {
             if(itemList.length) {
-                let title = `Estos son los precios de venta:`;
-                let composeMessage = await messageService.listPrices(itemList, field);
+                let title = template.sellingList.title;
+                let composeMessage = await template.listPrices(itemList, field);
                 return bot.sendMessage(userId, title + composeMessage);
             }
-            return bot.sendMessage(userId, "Todavía no hay precios de venta para el turno actual");
+            return bot.sendMessage(userId, template.sellingList.noPrices);
         })
         .catch((err) => {
             if(err.errorTitle) {
                 let response = err.errorTitle == "access_denied" ? chatId : userId;
                 return bot.sendMessage(response, err.errorMessage);
             }
-            return bot.sendMessage(userId, `Lo lamento, hubo un error al pedir la lista`);
+            return bot.sendMessage(userId, template.errors.sellingList);
         })   
 });
 
-bot.onText(/^\/compra/, function(msg){
+bot.onText(template.commands.purchasePrice, function(msg){
     let chatId = msg.chat.id;
     let userId = msg.from.id;
     let amount;
@@ -131,7 +122,7 @@ bot.onText(/^\/compra/, function(msg){
         .then((userData) => {
             amount = Number(textService.cleanCommand(msg.text));
             if(!Number.isInteger(amount)){
-                throw {"errorTitle": "invalid data", "errorMessage": `Por favor, introduce un número después del comando`};
+                throw {"errorTitle": "invalid data", "error_data": template.errors.invalid_data};
             } 
             let today = new Date();
             let params = {
@@ -140,34 +131,32 @@ bot.onText(/^\/compra/, function(msg){
                 "chat_id": chatId,
                 "purchase": amount
             }
-            return dynamodbService.put(params, 'prices')
+            return dynamodbService.put(params, pricesTable)
         })
-        .then((onInsert) => {
-            return bot.sendMessage(userId, `Has añadido ${amount} como tu precio de compra para hoy`);
+        .then(() => {
+            return bot.sendMessage(userId, template.purchasePriceResponse(amount));
         })
         .catch((err) => {
             if(err.errorTitle) {
                 let response = err.errorTitle == "access_denied" ? chatId : userId;
                 return bot.sendMessage(response, err.errorMessage);
             }
-            return bot.sendMessage(userId, `hubo un error al añadir el precio de compra`);
+            return bot.sendMessage(userId, template.errors.purchasePriceError);
         })   
 });
 
-bot.onText(/^\/dondeComprar/, function(msg){
+bot.onText(template.commands.purchaseList, function(msg){
     var chatId = msg.chat.id;
     let userId = msg.from.id
-    let user;
 
     return usersService.getUser(userId)
         .then((userData) => {
             if(new Date().getDay() != 0) {
-                throw {"errorTitle": "not sunday", "errorMessage": `Hoy no se compran nabos 😘`};
+                throw {"errorTitle": "not sunday", "errorMessage": template.errors.not_sunday};
             }
-            user = userData;
             let date = dateFormat(new Date(), "dd/mm/yyyy");
             let params = {
-                TableName: 'prices',
+                TableName: pricesTable,
                 KeyConditionExpression: "#dt = :dddd",
                 ExpressionAttributeNames: {
                     "#dt":"date",
@@ -184,41 +173,33 @@ bot.onText(/^\/dondeComprar/, function(msg){
         .then(async(itemList) => {
             if(itemList.length) {
                 let title = `Estos son los precios de compra:`;
-                let composeMessage = await messageService.listPrices(itemList, "purchase");
+                let composeMessage = await template.listPrices(itemList, "purchase");
                 return bot.sendMessage(userId, title + composeMessage);
             }
-            return bot.sendMessage(userId, "Hoy todavía no tengo datos de compra");
+            return bot.sendMessage(userId, template.purchaseList.noPrices);
         })
         .catch((err) => {
             if(err.errorTitle) {
                 let response = err.errorTitle == "access_denied" ? chatId : userId;
                 return bot.sendMessage(response, err.errorMessage);
             }
-            return bot.sendMessage(userId, `Lo lamento, hubo un error al pedir la lista`);
+            return bot.sendMessage(userId, template.errors.purchaseListError);
         })   
 });
 
-bot.onText(/^\/start/, function(msg){
+bot.onText(template.commands.start, function(msg){
     var chatId = msg.chat.id;
-    
-    bot.sendMessage(msg.chat.id, `Hola! Soy la versión 0.1.0 del nuevo Bot de comercio de nabos de @Annilou & @MercTISsue
-        \n Para empezar regístrate usando el comando /registro
-        \n Después usa /help para ver la lista de comandos disponibles`);
+    bot.sendMessage(chatId, template.startBot);
 });
 
-bot.onText(/^\/help/, function(msg){
+bot.onText(template.commands.help, function(msg){
     var chatId = msg.chat.id;
     let userId = msg.from.id
 
     return usersService.getUser(userId)
         .then((userData) => {
             //TODO: format
-            bot.sendMessage(msg.chat.id, `Aquí tienes la lista de comandos disponibles:
-                \n /venta <Number>: Añadir un precio de venta en tu isla (calcula automáticamente a que turno pertenece)
-                \n /dondeVender: Muestra la lista de precios para vender hoy en el turno actual
-                \n /compra <Number>: Añadir un precio de compra en tu isla
-                \n /dondeComprar: Muestra la lista de precios de compra para hoy
-                `);
+            bot.sendMessage(chatId, template.helpMessage);
         })
         .catch((err) => {
             console.log(err)
@@ -226,20 +207,20 @@ bot.onText(/^\/help/, function(msg){
                 let response = err.errorTitle == "access_denied" ? chatId : userId;
                 return bot.sendMessage(response, err.errorMessage);
             }
-            return bot.sendMessage(userId, `Lo lamento, hubo un error al pedir la lista`);
+            return bot.sendMessage(userId, template.errors.helpError);
         })  
 });
 
-bot.onText(/^\/registro/, function(msg){
+bot.onText(template.commands.register, function(msg){
     const chatId = msg.chat.id;
     const userId = msg.from.id;
     if(chatId != userId) {
-        throw {"errorTitle": "access_denied", "errorMessage": `Lo siento, para registrarte tienes que hablarme por privado`};
+        throw {"errorTitle": "access_denied", "errorMessage": template.errors.access_denied};
     }
     bot.getChatMember(groupId, chatId)
         .then((chatMember) => {
             if(chatMember.status != "creator" && chatMember.status != "member") {
-                throw {"errorTitle": "access_denied", "errorMessage": `Lo siento, sólo los miembros del club selecto pueden registrarse`};
+                throw {"errorTitle": "membership_required", "errorMessage": template.errors.membership_required};
             }
             let username = msg.from.username ? msg.from.username : "";
             let params = {
@@ -247,10 +228,10 @@ bot.onText(/^\/registro/, function(msg){
                 username,
                 "displayName": chatMember.user.first_name
             }
-            return dynamodbService.put(params, 'users')
+            return dynamodbService.put(params, usersTable)
         })
         .then((onInsert) => {
-            return bot.sendMessage(chatId, `${onInsert.displayName} te has registrado con éxito`);
+            return bot.sendMessage(chatId, template.registerResponse(onInsert.displayName));
         })
         .catch((err) => {
             console.log(err)
@@ -258,6 +239,6 @@ bot.onText(/^\/registro/, function(msg){
                 let response = err.errorTitle == "access_denied" ? chatId : userId;
                 return bot.sendMessage(response, err.errorMessage);
             }
-            return bot.sendMessage(chatId, `Lo siento, hubo un error al crearte el usuario`);
+            return bot.sendMessage(chatId, template.errors.registerError);
         })    
 });
