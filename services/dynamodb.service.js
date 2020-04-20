@@ -44,7 +44,7 @@ exports.get = (params, table) => {
             } else {
                 console.log("GetItem succeeded:", JSON.stringify(data, null, 2));
                 if(!data.Item) {
-                    reject('No document found');
+                    resolve({})
                 }else {
                     resolve (data.Item);
                 }
@@ -63,9 +63,25 @@ exports.query = (params) => {
             } else {
                 console.log("GetItem succeeded:", JSON.stringify(data, null, 2));
                 if(!data.Items) {
-                    reject('No document found');
+                    // FIXME: - recheck this to ensure is an array whats expected
+                    resolve([])
                 }
                 resolve(data.Items) 
+            }
+        });
+    })
+}
+
+exports.update = (params) => {
+    var docClient = new AWS.DynamoDB.DocumentClient();
+    return new Promise((resolve, reject) => {
+        docClient.update(params, function(err, data) {
+            if (err) {
+                console.error("Unable to update item. Error JSON:", JSON.stringify(err, null, 2));
+                reject (`Hubo un error al actualizar el documento`);
+            } else {
+                console.log("UpdateItem succeeded:", JSON.stringify(data, null, 2));
+                resolve(data.Attributes) 
             }
         });
     })

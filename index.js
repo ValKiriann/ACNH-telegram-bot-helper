@@ -15,57 +15,64 @@ const usersService = require('./services/user.service');
 const messageService = require('./services/message.service');
 
 bot.onText(/^\/venta/, function(msg){
-    // comprobar que es un numero y si no pasar
-    // comprobar la hora
-    var chatId = msg.chat.id;
-    let name = msg.from.first_name;
-    let username = msg.from.username;
-    let message = msg.text;
-    message = Number(message.replace("/addPrice ", ""));
-    let date = msg.date;
-    let time = new Date().getHours();
-    let field = time < 12 ? "morning" : "evening"
-    let messageTime = field == "morning" ? "mañana" : "tarde";
-
-    try {
-        console.log(message)
-        if(Number.isInteger(message)) {
-            AWS.config.update({
-                region: "eu-west-1",
-                endpoint: "https://dynamodb.eu-west-1.amazonaws.com",
-            });
-            var docClient = new AWS.DynamoDB.DocumentClient();
-            var today = new Date()
-            var params = {
-                TableName: "prices",
-                Item: {
-                    "date_by_user": dateFormat(today, "dd/mm/yyyy") + "#" + username,
-                    "date": +new Date,
-                    username,
-                }
-            };
-            params.Item[field] = message 
-            try {
-                docClient.put(params, function(err, data) {
-                    if (err) {
-                        console.error("Unable to add price", message, ". Error JSON:", JSON.stringify(err, null, 2));
-                        bot.sendMessage(chatId, `${name} hubo un error`);
-                    } else {
-                        console.log("PutItem succeeded:", params.Item.date_by_user);
-                        bot.sendMessage(chatId, `${name} ha añadido ${message} como precio de venta en su turno de ${messageTime}`);
-                    }
-                    });
-            } catch (error) {
-                console.log(error)
+    let chatId = msg.chat.id;
+    let userId = msg.from.id;
+    let amount;
+    let table = "prices";
+    let message = {
+        "morning": "mañana",
+        "evening": "tarde"
+    }
+    let hour = new Date(msg.date).getHours();
+    let field = hour < 12 ? "morning" : "evening"
+    let date = dateFormat(new Date(), "dd/mm/yyyy");
+    return usersService.getUser(userId)
+        .then((userData) => {
+            amount = Number(textService.cleanCommand(msg.text));
+            if(!Number.isInteger(amount)){
+                throw {"errorTitle": "invalid data", "errorMessage": `Por favor, introduce un número después del comando`};
             }
-        }else {
-            bot.sendMessage(chatId, `${name} por favor, introduce un número después del comando`);
-        }
-    } catch (error) {
-        console.log(error)
-        bot.sendMessage("error");
-
-    }    
+            let params = {
+                date,
+                "chat_id": chatId
+            }
+            return dynamodbService.get(params, table)            
+        })
+        .then((exists) => {
+            if(Object.keys(exists).length) {
+                var params = {
+                    TableName:table,
+                    Key:{
+                        date,
+                        "chat_id": userId
+                    },
+                    UpdateExpression: `set ${field} = :a`,
+                    ExpressionAttributeValues:{
+                        ":a":amount,
+                    },
+                    ReturnValues:"UPDATED_NEW"
+                };
+                return dynamodbService.update(params)
+            }else {
+                let params = {
+                    date,
+                    "timestamp": +new Date,
+                    "chat_id": userId,
+                }
+                params[field] = amount
+                return dynamodbService.put(params, table)
+            }
+        })
+        .then((document) => {
+            return bot.sendMessage(userId, `Has añadido ${amount} como tu precio de compra para hoy en el turno de ${message[field]} `);
+        })
+        .catch((err) => {
+            console.log(err)
+            if(err.errorTitle) {
+                return bot.sendMessage(userId, err.errorMessage);
+            }
+            return bot.sendMessage(userId, `hubo un error al añadir el precio de compra`);
+        })   
 });
 
 bot.onText(/^\/compra/, function(msg){
