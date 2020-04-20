@@ -234,12 +234,12 @@ bot.onText(/^\/registro/, function(msg){
     const chatId = msg.chat.id;
     const userId = msg.from.id;
     if(chatId != userId) {
-        return botsService.sendMessage(chatId, `Lo siento, sólo puedes registrarte por privado!`);
+        throw {"errorTitle": "access_denied", "errorMessage": `Lo siento, para registrarte tienes que hablarme por privado`};
     }
     bot.getChatMember(groupId, chatId)
         .then((chatMember) => {
             if(chatMember.status != "creator" && chatMember.status != "member") {
-                throw {"errorTitle": "access denied", "errorMessage": `Lo siento, sólo los miembros del club selecto pueden registrarse`};
+                throw {"errorTitle": "access_denied", "errorMessage": `Lo siento, sólo los miembros del club selecto pueden registrarse`};
             }
             let username = msg.from.username ? msg.from.username : "";
             let params = {
@@ -255,7 +255,8 @@ bot.onText(/^\/registro/, function(msg){
         .catch((err) => {
             console.log(err)
             if(err.errorTitle) {
-                return bot.sendMessage(userId, err.errorMessage);
+                let response = err.errorTitle == "access_denied" ? chatId : userId;
+                return bot.sendMessage(response, err.errorMessage);
             }
             return bot.sendMessage(chatId, `Lo siento, hubo un error al crearte el usuario`);
         })    
