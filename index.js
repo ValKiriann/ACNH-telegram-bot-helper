@@ -24,7 +24,7 @@ bot.onText(/^\/venta/, function(msg){
         "evening": "tarde"
     }
     //TODO: meter esto en una función
-    let hour = new Date(msg.date).getHours();
+    let hour = new Date().getHours() + process.env.TIMEZONE;
     let field = hour < 12 ? "morning" : "evening"
     let date = dateFormat(new Date(), "dd/mm/yyyy");
     return usersService.getUser(userId)
