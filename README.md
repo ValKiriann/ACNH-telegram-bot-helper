@@ -10,3 +10,8 @@ MVP: Currently - with this bot you can manage the selling/buying prices of all y
 **ES** ![](https://github.com/ValKiriann/ACNH-telegram-bot-helper/wiki/images/extensible-markup-language-purple.png) ACNH Telegram Bot Helper es el bot que estás buscando si necesitas ayuda para automatizar tu grupo de Animal Crossing New Horizons en Telegram. 
 
 PMV: Por el momento - con él podrás manejar los precios de compra venta de los miembros de tu grupo y mostrar la lista de precios siempre que la necesites.
+
+
+***
+
+_Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>_
