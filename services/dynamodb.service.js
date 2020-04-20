@@ -62,10 +62,6 @@ exports.query = (params) => {
                 reject (`Hubo un error al pedir la lista`);
             } else {
                 console.log("GetItem succeeded:", JSON.stringify(data, null, 2));
-                if(!data.Items) {
-                    // FIXME: - recheck this to ensure is an array whats expected
-                    resolve([])
-                }
                 resolve(data.Items) 
             }
         });

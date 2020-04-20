@@ -114,24 +114,33 @@ bot.onText(/^\/dondeComprar/, function(msg){
 
     return usersService.getUser(userId)
         .then((userData) => {
+            if(new Date().getDay() != 0) {
+                throw {"errorTitle": "not sunday", "errorMessage": `Hoy no se compran nabos 😘`};
+            }
             user = userData;
-            let today = new Date();
+            let date = dateFormat(new Date(), "dd/mm/yyyy");
             let params = {
                 TableName: 'prices',
                 KeyConditionExpression: "#dt = :dddd",
                 ExpressionAttributeNames: {
-                    "#dt":"date"
+                    "#dt":"date",
+                    "#p": "purchase"
                 },
+                FilterExpression:"attribute_exists(#p)",
                 ExpressionAttributeValues: {
-                    ":dddd": dateFormat(today, "dd/mm/yyyy")
+                    ":dddd": date
+                    
                 }
             }
             return dynamodbService.query(params)
         })
         .then(async(itemList) => {
-            let title = `${user.displayName} estos son los precios de compra:`;
-            let composeMessage = await messageService.listPrices(itemList);
-            return bot.sendMessage(userId, title + composeMessage);
+            if(itemList.length) {
+                let title = `${user.displayName} estos son los precios de compra:`;
+                let composeMessage = await messageService.listPrices(itemList);
+                return bot.sendMessage(userId, title + composeMessage);
+            }
+            return bot.sendMessage(userId, "Hoy todavía no tengo datos de compra");
         })
         .catch((err) => {
             console.log(err)
