@@ -116,6 +116,9 @@ node index.js
 If everything is OK you can start talking with your bot.   
 The users need to register chatting with the bot in private. Once a user is registered, the commands can be launched in private or in the group, whoever the bot would always reply in private, thats why the user needs to interact at least one time with the bot in private, otherwise the bot wont be able to initiate a chat with the user.  
 
+![terminal-console.log-group-id](https://github.com/ValKiriann/ACNH-telegram-bot-helper/wiki/images/example-readme.png)  
+
+
 _[⬆️Back to Content Table](#back)_  
 
 <a name="instalacion"></a>   
@@ -146,6 +149,7 @@ node index.js
 Si todo ha ido bien ya podrías empezar a hablar con tu bot.   
 Los usuarios se registran hablando por privado con el bot. Una vez registrado, se pueden lanzar los comandos por privado o por el grupo, pero el bot responde por privado, es por eso que hace falta que cada usuario interactúe al menos una vez con el bot por privado, o de lo contrario no podría abrir una conversación con el usuario.
 ***
+![terminal-console.log-group-id](https://github.com/ValKiriann/ACNH-telegram-bot-helper/wiki/images/example-readme.png)  
 
 _[⬆️Volver a la Tabla de Contenidos](#back)_  
 
