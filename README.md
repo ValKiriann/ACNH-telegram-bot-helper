@@ -11,15 +11,26 @@ MVP: Currently - with this bot you can manage the selling/buying prices of all y
 
 El Bot permite registrar usuarios que se encuentren dentro de un grupo de Telegram al que pertenezca (para filtrar quién lo usa) y almacena datos en el tiempo de compra y venta de los usuarios.
 
-#### Lista de comandos y acciones:
-- Añadir precio de venta (Por defecto /venta <number>): Añade un precio de venta para el día actual y el turno actual (controla por las horas si estás en turno de mañana o de tarde)
--Lista los precios para hoy (Por defecto /dondeVender): Mjuestra una lista con todos los precios de venta recogidos durante le día para el turno actual
-- Añadir precio de compra (Por defecto /compra <number>): Añade un precio de compra para Daisy Mae en tu isla para el día actual
-- Lista los precios de compra para hoy (Por defecto /dondeComprar): Muestra una lista con todos los precios de compra recogidos durante la mañana
-- Iniciar el bot (/start): Inicia el bot e indica como registrarse
-- Ayuda (por defecto /help): Muetsra una lista de comandos
-- Registrar un usuario (Por defecto /registro): Registra a un usuario para poder usar los comandos del bot. El usuario tiene que encontrarse en un grupo al que también pertenezca el bot. El bot está diseñado para poder filtrar quien hace uso del bot
-> Disclaimer: El bot recaba información sensible de sus usuarios, es importante notificar a las personas que vayan a hacer uso de él. Para poder funcionar el bot guarda el ID de telegram del usuario y lo utiliza como Identificador único en su base de datos. También almacena el nombre de usuario en caso de tener uno público y su nombre para mostrar en telegram.
+#### Command List: | Lista de comandos y acciones:
+**EN** ![translation-icon](https://github.com/ValKiriann/ACNH-telegram-bot-helper/wiki/images/extensible-markup-language-blue.png)   
+- Add selling price (**/venta <number>** by default): Add a selling price for the current day and turn
+- Selling Price List (**/dondeVender** by default): Shows a list with all the selling prices for the current day and turn
+- Add purchase price (**/compra <number>** by default): Add a purchase price for Daisy Mae in your island for the current day 
+- Purchase Price List (**/dondeComprar** by default): Shows a list with all the purchase prices for the current morning
+- Start the bot (**/start** by default): Starts the bot and shows how to register  
+- Help (**help** by default): Show the command list to a registered user
+- Register a user (**/registro** by default): Registers a new user to be able to use the commands. The user must be in a telegram group where the bot also is a member. The bot is designed to be able to filter who uses it.  
+> Disclaimer: The bot collects sensible telegram user information, it is important to notify the people that are going to use the bot. In order to work properly, the bot stores the ID of the user in telegram and uses it as a unique identifier in his database. It also stores the user id of Telegram in case that the user has one and the public name that the user shows in Telegram.  
+
+**ES** ![icono-traducción](https://github.com/ValKiriann/ACNH-telegram-bot-helper/wiki/images/extensible-markup-language-purple.png)  
+- Añadir precio de venta (Por defecto **/venta <number>**): Añade un precio de venta para el día actual y el turno actual (controla por las horas si estás en turno de mañana o de tarde)  
+- Lista los precios para hoy (Por defecto **/dondeVender**): Muestra una lista con todos los precios de venta recogidos durante le día para el turno actual  
+- Añadir precio de compra (Por defecto **/compra <number>**): Añade un precio de compra para Daisy Mae en tu isla para el día actual  
+- Lista los precios de compra para hoy (Por defecto **/dondeComprar): Muestra una lista con todos los precios de compra recogidos durante la mañana  
+- Iniciar el bot (**/start**): Inicia el bot e indica como registrarse  
+- Ayuda (por defecto **/help**): Muetsra una lista de comandos  
+- Registrar un usuario (Por defecto **/registro**): Registra a un usuario para poder usar los comandos del bot. El usuario tiene que encontrarse en un grupo al que también pertenezca el bot. El bot está diseñado para poder filtrar quien hace uso del bot
+> Disclaimer: El bot recaba información sensible de sus usuarios, es importante notificar a las personas que vayan a hacer uso de él. Para poder funcionar el bot guarda el ID de telegram del usuario y lo utiliza como Identificador único en su base de datos. También almacena el nombre de usuario en caso de tener uno público y su nombre para mostrar en telegram.  
 
 ## Pre-requisitos
 
@@ -58,7 +69,7 @@ GROUP_ID= -- el ID del grupo de telegram en el que va a estar tu bot y tus usuar
 ```
 node index.js
 ```
-Si todo ha ido bien ya podrías empezar a hablar con tu bot. 
+Si todo ha ido bien ya podrías empezar a hablar con tu bot.   
 Los usuarios se registran hablando por privado con el bot. Una vez registrado, se pueden lanzar los comandos por privado o por el grupo, pero el bot responde por privado, es por eso que hace falta que cada usuario interactúe al menos una vez con el bot por privado, o de lo contrario no podría abrir una conversación con el usuario.
 ***
 
