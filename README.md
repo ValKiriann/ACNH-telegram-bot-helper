@@ -6,6 +6,8 @@
 
 **ES** ![icono-traducción](https://github.com/ValKiriann/ACNH-telegram-bot-helper/wiki/images/extensible-markup-language-purple.png) Este README se ha escrito en dos idiomas. Puedes leerlo en Inglés y en Español. No me gusta usar banderas de país para distinguir idiomas así que voy a usar el icono universal de traductor con un color y el código ISO de dos dígitos para representar los idiomas. El Español siempre va a ser representado por un color morado pastel.
 
+<img align="center" width="300" src="https://github.com/ValKiriann/ACNH-telegram-bot-helper/wiki/images/example.gif">
+
 <a name="back"></a>   
 
 | Table of Contents | Tabla de Contenidos |
