@@ -53,7 +53,7 @@ USERS_TABLE= --> nombre de la tabla users
 DYNAMODB_URL= --> url de dynamodb, si tienes las tablas en irlanda es https://dynamodb.eu-west-1.amazonaws.com
 GROUP_ID= -- el ID del grupo de telegram en el que va a estar tu bot y tus usuarios. He añadido un console.log al comando de /registro para que si lo ejecutas desde el grupo en la terminal donde lances el bot aparezca este mensaje:
 ```
-[Imgur](https://i.imgur.com/i9L6kGV.png)
+![terminal-console.log-group-id](https://github.com/ValKiriann/ACNH-telegram-bot-helper/wiki/images/terminal-find-groupId.png)  
 4. Enciende el bot lanzando la app en NodeJs
 ```
 node index.js
