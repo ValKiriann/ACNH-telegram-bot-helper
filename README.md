@@ -25,14 +25,12 @@
 
 MVP: Currently - with this bot you can manage the selling/buying prices of all your group members and display the list of prices whenever you need it   
 
-_[⬆️Back to Content Table](#back)_  
-
 <a name="Descripcion"></a>   
 **ES** ![icono-traducción](https://github.com/ValKiriann/ACNH-telegram-bot-helper/wiki/images/extensible-markup-language-purple.png) ACNH Telegram Bot Helper es el bot que estás buscando si necesitas ayuda para automatizar tu grupo de Animal Crossing New Horizons en Telegram. 
 
 El Bot permite registrar usuarios que se encuentren dentro de un grupo de Telegram al que pertenezca (para filtrar quién lo usa) y almacena datos en el tiempo de compra y venta de los usuarios.
 
-_[⬆️Volver a la Tabla de Contenidos](#back)_
+_[⬆️Back to Content Table | Volver a la Tabla de Contenidos](#back)_  
 
 ## Command List: | Lista de comandos y acciones:
 <a name="command"></a>   
