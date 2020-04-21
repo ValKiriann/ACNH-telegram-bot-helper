@@ -6,24 +6,29 @@
 
 **ES** ![icono-traducción](https://github.com/ValKiriann/ACNH-telegram-bot-helper/wiki/images/extensible-markup-language-purple.png) Este README se ha escrito en dos idiomas. Puedes leerlo en Inglés y en Español. No me gusta usar banderas de país para distinguir idiomas así que voy a usar el icono universal de traductor con un color y el código ISO de dos dígitos para representar los idiomas. El Español siempre va a ser representado por un color morado pastel.
 
+<a name="back"></a>   
+
 | Table of Contents | Tabla de Contenidos |
 | ------------------- | --------------------- |
-| [Description](#Description) | [Descripción](#Descripción) |
-2. [Example2](#example2)
-3. [Third Example](#third-example)
-4. [Fourth Example](#fourth-examplehttpwwwfourthexamplecom)
+| [Description](#description) | [Descripción](#descripcion) |
+| [Command List](#command) | [Lista de Comandos](#comandos) |
+| [Pre-requirements](#pre-requirements) | [Pre-requisitos](#comandos) |
+| [Installation](#installation) | [Instalación](#instalacion) |
 
 ## Description | Descripción <a name="Description"></a>
 <a name="Description"></a>   
 **EN** ![translation-icon](https://github.com/ValKiriann/ACNH-telegram-bot-helper/wiki/images/extensible-markup-language-blue.png) ACNH Telegram Bot Helper is the bot you are looking for if you need help to automate your Animal Crossing New Horizons group channel.   
 
 MVP: Currently - with this bot you can manage the selling/buying prices of all your group members and display the list of prices whenever you need it   
-<a name="Descripción"></a>   
+<a name="Descripcion"></a>   
 **ES** ![icono-traducción](https://github.com/ValKiriann/ACNH-telegram-bot-helper/wiki/images/extensible-markup-language-purple.png) ACNH Telegram Bot Helper es el bot que estás buscando si necesitas ayuda para automatizar tu grupo de Animal Crossing New Horizons en Telegram. 
 
 El Bot permite registrar usuarios que se encuentren dentro de un grupo de Telegram al que pertenezca (para filtrar quién lo usa) y almacena datos en el tiempo de compra y venta de los usuarios.
 
+_[⬆️Back to Content Table](#back)_
+
 ## Command List: | Lista de comandos y acciones:
+<a name="command"></a>   
 **EN** ![translation-icon](https://github.com/ValKiriann/ACNH-telegram-bot-helper/wiki/images/extensible-markup-language-blue.png)   
 - Add selling price (**/venta <number>** by default): Add a selling price for the current day and turn
 - Selling Price List (**/dondeVender** by default): Shows a list with all the selling prices for the current day and turn
@@ -33,7 +38,7 @@ El Bot permite registrar usuarios que se encuentren dentro de un grupo de Telegr
 - Help (**help** by default): Show the command list to a registered user
 - Register a user (**/registro** by default): Registers a new user to be able to use the commands. The user must be in a telegram group where the bot also is a member. The bot is designed to be able to filter who uses it.  
 > Disclaimer: The bot collects sensible telegram user information, it is important to notify the people that are going to use the bot. In order to work properly, the bot stores the ID of the user in telegram and uses it as a unique identifier in his database. It also stores the user id of Telegram in case that the user has one and the public name that the user shows in Telegram.  
-
+<a name="comandos"></a>   
 **ES** ![icono-traducción](https://github.com/ValKiriann/ACNH-telegram-bot-helper/wiki/images/extensible-markup-language-purple.png)  
 - Añadir precio de venta (Por defecto **/venta <number>**): Añade un precio de venta para el día actual y el turno actual (controla por las horas si estás en turno de mañana o de tarde)  
 - Lista los precios para hoy (Por defecto **/dondeVender**): Muestra una lista con todos los precios de venta recogidos durante le día para el turno actual  
@@ -45,6 +50,7 @@ El Bot permite registrar usuarios que se encuentren dentro de un grupo de Telegr
 > Disclaimer: El bot recaba información sensible de sus usuarios, es importante notificar a las personas que vayan a hacer uso de él. Para poder funcionar el bot guarda el ID de telegram del usuario y lo utiliza como Identificador único en su base de datos. También almacena el nombre de usuario en caso de tener uno público y su nombre para mostrar en telegram.  
 
 ## Pre-requirements | Pre-requisitos
+<a name="pre-requirements"></a>   
 **EN** ![translation-icon](https://github.com/ValKiriann/ACNH-telegram-bot-helper/wiki/images/extensible-markup-language-blue.png)   
 - An Amazon web services account and a pair of credential keys. The bot requires DynamoDB as database to store the information collected and to display it.  
 - DynamoDB. The free tier is enough to execute the bot services so you would not generate a cost for using this service. (Check the pricing table in case that your are going to use it with a huge number of users). The code is made so that 2 tables of dynamoDB are created in the region of your election. The tables must follow this minimumn structure, but it is possible to modify the names of the table if you want to:  
@@ -55,7 +61,7 @@ El Bot permite registrar usuarios que se encuentren dentro de un grupo de Telegr
 | chat_id - sort key - number |
 
 - A server to deploy the bot. It could be your own local pc but the life of the robot would depend on being executed inside your machine. You can user a paid server but I did not want to spend any money on this project so I deployed my copy of the bot in a raspberry pi in my home as of the moment of this writing.
-
+<a name="pre-requisitos"></a>   
 **ES** ![icono-traducción](https://github.com/ValKiriann/ACNH-telegram-bot-helper/wiki/images/extensible-markup-language-purple.png)    
 - Una cuenta de Amazon Web Services y una pareja de claves para acceder a los servicios de AWS. Usaremos DynamoDB como base de datos NoSQL y para ello hay que conectarse por credenciales.
 
@@ -70,6 +76,7 @@ El Bot permite registrar usuarios que se encuentren dentro de un grupo de Telegr
 - Un server en el que desplegar el bot. Puede ser tu propio ordenador pero la vida del robot dependerá de que se esté ejecutando en él. Puede también usar un servidor de pago aunque para mí no era una opción invertir dinero en este proyecto asi que yo he optado por desplegarlo de momento en una raspberry.
 
 ## Installation | Instalación
+<a name="installation"></a>   
 **EN** ![translation-icon](https://github.com/ValKiriann/ACNH-telegram-bot-helper/wiki/images/extensible-markup-language-blue.png)   
 1. Create a new bot for Telegram [(Link)](https://core.telegram.org/bots#6-botfather)  
 2. Clone this repository  
@@ -96,7 +103,7 @@ node index.js
 If everything is OK you can start talking with your bot.   
 The users need to register chatting with the bot in private. Once a user is registered, the commands can be launched in private or in the group, whoever the bot would always reply in private, thats why the user needs to interact at least one time with the bot in private, otherwise the bot wont be able to initiate a chat with the user.  
 
-
+<a name="instalacion"></a>   
 **ES** ![icono-traducción](https://github.com/ValKiriann/ACNH-telegram-bot-helper/wiki/images/extensible-markup-language-purple.png)    
 
 1. Crea un nuevo Bot para telegram [(Link)](https://core.telegram.org/bots#6-botfather)
