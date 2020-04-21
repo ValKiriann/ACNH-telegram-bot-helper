@@ -2,7 +2,7 @@ const AWS = require('aws-sdk');
 AWS.config = new AWS.Config();
 AWS.config.update({
     region: "eu-west-1",
-    endpoint: "https://dynamodb.eu-west-1.amazonaws.com",
+    endpoint: process.env.DYNAMODB_URL,
 });
 
 exports.put = (params, table) => {
