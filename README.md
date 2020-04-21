@@ -36,6 +36,7 @@ El Bot permite registrar usuarios que se encuentren dentro de un grupo de Telegr
 **EN** ![translation-icon](https://github.com/ValKiriann/ACNH-telegram-bot-helper/wiki/images/extensible-markup-language-blue.png)   
 - An Amazon web services account and a pair of credential keys. The bot requires DynamoDB as database to store the information collected and to display it.  
 - DynamoDB. The free tier is enough to execute the bot services so you would not generate a cost for using this service. (Check the pricing table in case that your are going to use it with a huge number of users). The code is made so that 2 tables of dynamoDB are created in the region of your election. The tables must follow this minimumn structure, but it is possible to modify the names of the table if you want to:  
+
 | first table: prices | second table: users |
 | ------------------- | ------------------- |
 | date - primary key - string | chat_id - primary key - number |
