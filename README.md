@@ -14,11 +14,11 @@
 4. [Fourth Example](#fourth-examplehttpwwwfourthexamplecom)
 
 ## Description | Descripción <a name="Description"></a>
-<a name="Description"></a>
+<a name="Description"></a>   
 **EN** ![translation-icon](https://github.com/ValKiriann/ACNH-telegram-bot-helper/wiki/images/extensible-markup-language-blue.png) ACNH Telegram Bot Helper is the bot you are looking for if you need help to automate your Animal Crossing New Horizons group channel.   
 
-MVP: Currently - with this bot you can manage the selling/buying prices of all your group members and display the list of prices whenever you need it
-<a name="Descripción"></a>
+MVP: Currently - with this bot you can manage the selling/buying prices of all your group members and display the list of prices whenever you need it   
+<a name="Descripción"></a>   
 **ES** ![icono-traducción](https://github.com/ValKiriann/ACNH-telegram-bot-helper/wiki/images/extensible-markup-language-purple.png) ACNH Telegram Bot Helper es el bot que estás buscando si necesitas ayuda para automatizar tu grupo de Animal Crossing New Horizons en Telegram. 
 
 El Bot permite registrar usuarios que se encuentren dentro de un grupo de Telegram al que pertenezca (para filtrar quién lo usa) y almacena datos en el tiempo de compra y venta de los usuarios.
