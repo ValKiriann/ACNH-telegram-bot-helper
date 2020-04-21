@@ -11,7 +11,7 @@ MVP: Currently - with this bot you can manage the selling/buying prices of all y
 
 El Bot permite registrar usuarios que se encuentren dentro de un grupo de Telegram al que pertenezca (para filtrar quién lo usa) y almacena datos en el tiempo de compra y venta de los usuarios.
 
-#### Command List: | Lista de comandos y acciones:
+## Command List: | Lista de comandos y acciones:
 **EN** ![translation-icon](https://github.com/ValKiriann/ACNH-telegram-bot-helper/wiki/images/extensible-markup-language-blue.png)   
 - Add selling price (**/venta <number>** by default): Add a selling price for the current day and turn
 - Selling Price List (**/dondeVender** by default): Shows a list with all the selling prices for the current day and turn
@@ -32,20 +32,34 @@ El Bot permite registrar usuarios que se encuentren dentro de un grupo de Telegr
 - Registrar un usuario (Por defecto **/registro**): Registra a un usuario para poder usar los comandos del bot. El usuario tiene que encontrarse en un grupo al que también pertenezca el bot. El bot está diseñado para poder filtrar quien hace uso del bot
 > Disclaimer: El bot recaba información sensible de sus usuarios, es importante notificar a las personas que vayan a hacer uso de él. Para poder funcionar el bot guarda el ID de telegram del usuario y lo utiliza como Identificador único en su base de datos. También almacena el nombre de usuario en caso de tener uno público y su nombre para mostrar en telegram.  
 
-## Pre-requisitos
+## Pre-requirements | Pre-requisitos
+**EN** ![translation-icon](https://github.com/ValKiriann/ACNH-telegram-bot-helper/wiki/images/extensible-markup-language-blue.png)   
+- An Amazon web services account and a pair of credential keys. The bot requires DynamoDB as database to store the information collected and to display it.  
+- DynamoDB. The free tier is enough to execute the bot services so you would not generate a cost for using this service. (Check the pricing table in case that your are going to use it with a huge number of users). The code is made so that 2 tables of dynamoDB are created in the region of your election. The tables must follow this minimumn structure, but it is possible to modify the names of the table if you want to:  
+| first table: prices | second table: users |
+| ------------------- | ------------------- |
+| date - primary key - string | chat_id - primary key - number |
+| chat_id - sort key - number |
 
+- A server to deploy the bot. It could be your own local pc but the life of the robot would depend on being executed inside your machine. You can user a paid server but I did not want to spend any money on this project so I deployed my copy of the bot in a raspberry pi in my home as of the moment of this writing.
+
+**ES** ![icono-traducción](https://github.com/ValKiriann/ACNH-telegram-bot-helper/wiki/images/extensible-markup-language-purple.png)    
 - Una cuenta de Amazon Web Services y una pareja de claves para acceder a los servicios de AWS. Usaremos DynamoDB como base de datos NoSQL y para ello hay que conectarse por credenciales.
 
-- DynamoDB. Con la capa gratuita permanente de este servicio tenemos suficiente por lo que no generarás un gasto por usar este servicio. La programación está hecha para que conectes dos tablas de dynamoDB en la región de tu elección. Las tablas deben seguir esta estructura mínima, es posible modificar el nombre de las tablas pero no de los campos primarios:
+- DynamoDB. Con la capa gratuita permanente de este servicio tenemos suficiente por lo que no generarás un gasto por usar este servicio. (Consulta la tabla de precios en caso de que vayas a usar el bot con una ingente cantidad de usuarios). La programación está hecha para que conectes dos tablas de dynamoDB en la región de tu elección. Las tablas deben seguir esta estructura mínima, es posible modificar el nombre de las tablas pero no de los campos primarios:  
 
 | tabla 1: prices | tabla 2: users |
 | --------------- | ---------------|
 | date - primary key - string | chat_id - primary key - number |
 | chat_id - sort key - number |
 
+
 - Un server en el que desplegar el bot. Puede ser tu propio ordenador pero la vida del robot dependerá de que se esté ejecutando en él. Puede también usar un servidor de pago aunque para mí no era una opción invertir dinero en este proyecto asi que yo he optado por desplegarlo de momento en una raspberry.
 
-## Instalación
+## Installation | Instalación
+**EN** ![translation-icon](https://github.com/ValKiriann/ACNH-telegram-bot-helper/wiki/images/extensible-markup-language-blue.png)   
+
+**ES** ![icono-traducción](https://github.com/ValKiriann/ACNH-telegram-bot-helper/wiki/images/extensible-markup-language-purple.png)    
 
 1. Crea un nuevo Bot para telegram
 2. Clonar el repositorio
