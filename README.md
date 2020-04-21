@@ -1,17 +1,65 @@
-<img align="center" src="http://www.thecourieronline.co.uk/wp-content/uploads/2017/11/Tom-Nook-Courier.jpg"> 
+<img align="center" src="http://www.thecourieronline.co.uk/wp-content/uploads/2017/11/Tom-Nook-Courier.jpg" alt="fondo de pantalla tom nook"> 
 
 # ACNH-telegram-bot-helper
 ## Description | Descripción
 
-**EN** ![](https://github.com/ValKiriann/ACNH-telegram-bot-helper/wiki/images/extensible-markup-language-blue.png) ACNH Telegram Bot Helper is the bot you are looking for if you need help to automate your Animal Crossing New Horizons group channel.   
+**EN** ![translation-icon](https://github.com/ValKiriann/ACNH-telegram-bot-helper/wiki/images/extensible-markup-language-blue.png) ACNH Telegram Bot Helper is the bot you are looking for if you need help to automate your Animal Crossing New Horizons group channel.   
 
 MVP: Currently - with this bot you can manage the selling/buying prices of all your group members and display the list of prices whenever you need it
 
-**ES** ![](https://github.com/ValKiriann/ACNH-telegram-bot-helper/wiki/images/extensible-markup-language-purple.png) ACNH Telegram Bot Helper es el bot que estás buscando si necesitas ayuda para automatizar tu grupo de Animal Crossing New Horizons en Telegram. 
+**ES** ![icono-traducción](https://github.com/ValKiriann/ACNH-telegram-bot-helper/wiki/images/extensible-markup-language-purple.png) ACNH Telegram Bot Helper es el bot que estás buscando si necesitas ayuda para automatizar tu grupo de Animal Crossing New Horizons en Telegram. 
 
-PMV: Por el momento - con él podrás manejar los precios de compra venta de los miembros de tu grupo y mostrar la lista de precios siempre que la necesites.
+El Bot permite registrar usuarios que se encuentren dentro de un grupo de Telegram al que pertenezca (para filtrar quién lo usa) y almacena datos en el tiempo de compra y venta de los usuarios.
 
+#### Lista de comandos y acciones:
+- Añadir precio de venta (Por defecto /venta <number>): Añade un precio de venta para el día actual y el turno actual (controla por las horas si estás en turno de mañana o de tarde)
+-Lista los precios para hoy (Por defecto /dondeVender): Mjuestra una lista con todos los precios de venta recogidos durante le día para el turno actual
+- Añadir precio de compra (Por defecto /compra <number>): Añade un precio de compra para Daisy Mae en tu isla para el día actual
+- Lista los precios de compra para hoy (Por defecto /dondeComprar): Muestra una lista con todos los precios de compra recogidos durante la mañana
+- Iniciar el bot (/start): Inicia el bot e indica como registrarse
+- Ayuda (por defecto /help): Muetsra una lista de comandos
+- Registrar un usuario (Por defecto /registro): Registra a un usuario para poder usar los comandos del bot. El usuario tiene que encontrarse en un grupo al que también pertenezca el bot. El bot está diseñado para poder filtrar quien hace uso del bot
+> Disclaimer: El bot recaba información sensible de sus usuarios, es importante notificar a las personas que vayan a hacer uso de él. Para poder funcionar el bot guarda el ID de telegram del usuario y lo utiliza como Identificador único en su base de datos. También almacena el nombre de usuario en caso de tener uno público y su nombre para mostrar en telegram.
 
+## Pre-requisitos
+
+- Una cuenta de Amazon Web Services y una pareja de claves para acceder a los servicios de AWS. Usaremos DynamoDB como base de datos NoSQL y para ello hay que conectarse por credenciales.
+
+- DynamoDB. Con la capa gratuita permanente de este servicio tenemos suficiente por lo que no generarás un gasto por usar este servicio. La programación está hecha para que conectes dos tablas de dynamoDB en la región de tu elección. Las tablas deben seguir esta estructura mínima, es posible modificar el nombre de las tablas pero no de los campos primarios:
+
+| tabla 1: prices | tabla 2: users |
+| --------------- | ---------------|
+| date - primary key - string | chat_id - primary key - number |
+| chat_id - sort key - number |
+
+- Un server en el que desplegar el bot. Puede ser tu propio ordenador pero la vida del robot dependerá de que se esté ejecutando en él. Puede también usar un servidor de pago aunque para mí no era una opción invertir dinero en este proyecto asi que yo he optado por desplegarlo de momento en una raspberry.
+
+## Instalación
+
+1. Crea un nuevo Bot para telegram
+2. Clonar el repositorio
+3. Instalación de dependencias
+```
+npm i
+```
+3. Renombra el archivo .env-example a .env y llénalo con tus valores: 
+```
+TELEGRAM_BOT_TOKEN= ---> la token de tu bot de telegram  
+AWS_ACCESS_KEY_ID= --> access key id de aws  
+AWS_SECRET_ACCESS_KEY= --> Secret access Key de aws  
+TIMEZONE= --> Esta variable ayuda a corregir el uso horario del servidor donde despliegues la app con tu hora local para poder hacer la distinción de turnos de venta. (hasta las 12 am el de mañana y posteriormente el de la tarde) Pon aquí el número que haya que sumar (o con un - delante para restar) a la hora local del servidor y así poder tener una sincronización con tu hora local  
+PRICES_TABLE= --> Nombre de la tabla prices  
+USERS_TABLE= --> nombre de la tabla users  
+DYNAMODB_URL= --> url de dynamodb, si tienes las tablas en irlanda es https://dynamodb.eu-west-1.amazonaws.com
+GROUP_ID= -- el ID del grupo de telegram en el que va a estar tu bot y tus usuarios. He añadido un console.log al comando de /registro para que si lo ejecutas desde el grupo en la terminal donde lances el bot aparezca este mensaje:
+```
+[Imgur](https://i.imgur.com/i9L6kGV.png)
+4. Enciende el bot lanzando la app en NodeJs
+```
+node index.js
+```
+Si todo ha ido bien ya podrías empezar a hablar con tu bot. 
+Los usuarios se registran hablando por privado con el bot. Una vez registrado, se pueden lanzar los comandos por privado o por el grupo, pero el bot responde por privado, es por eso que hace falta que cada usuario interactúe al menos una vez con el bot por privado, o de lo contrario no podría abrir una conversación con el usuario.
 ***
 
 _Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>_
