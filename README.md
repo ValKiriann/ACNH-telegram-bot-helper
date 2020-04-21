@@ -17,6 +17,7 @@
 | [Command List](#command) | [Lista de Comandos](#comandos) |
 | [Pre-requirements](#pre-requirements) | [Pre-requisitos](#comandos) |
 | [Installation](#installation) | [Instalación](#instalacion) |
+| [Templating](#templating) | [Templating](#templating) |
 
 ## Description | Descripción
 <a name="Description"></a>   
@@ -151,5 +152,15 @@ Los usuarios se registran hablando por privado con el bot. Una vez registrado, s
 ***
 
 _[⬆️Volver a la Tabla de Contenidos](#back)_  
+
+## Templating
+<a name="templating"></a>   
+**EN** ![translation-icon](https://github.com/ValKiriann/ACNH-telegram-bot-helper/wiki/images/extensible-markup-language-blue.png) I've put all the bot responses inside a javascript file to be used as a template so it can be easily edited to fit your needs without coding anything. Just edit the file /resources/template.resources.js   
+
+**ES** ![icono-traducción](https://github.com/ValKiriann/ACNH-telegram-bot-helper/wiki/images/extensible-markup-language-purple.png) He metido todas las respuestas del bot en un archivo JS a modo de plantilla para que pueda ser personalizado de forma sencilla sin tener que tocar el código. Simplementa edita el archivo /resources/template.resources.js   
+
+_[⬆️Back to Content Table | Volver a la Tabla de Contenidos](#back)_  
+
+***
 
 _Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>_
