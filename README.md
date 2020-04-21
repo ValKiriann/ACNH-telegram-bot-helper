@@ -1,9 +1,9 @@
 <img align="center" src="http://www.thecourieronline.co.uk/wp-content/uploads/2017/11/Tom-Nook-Courier.jpg" alt="fondo de pantalla tom nook"> 
 
 # ACNH-telegram-bot-helper
-**EN** [[images/extensible-markup-language-blue.png]] This README was writen in two languages. You can read it in English or in Spanish. I dont like the country flag distinctive to represent languages. Instead, a combination of the universal icon of translation with a color with the two digit ISO code would represent the language. English would always be represented here with pastel blue.
+**EN** translation-icon](https://github.com/ValKiriann/ACNH-telegram-bot-helper/wiki/images/extensible-markup-language-blue.png) This README was writen in two languages. You can read it in English or in Spanish. I dont like the country flag distinctive to represent languages. Instead, a combination of the universal icon of translation with a color with the two digit ISO code would represent the language. English would always be represented here with pastel blue.
 
-**ES** [[images/extensible-markup-language-purple.png]] Este README se ha escrito en dos idiomas. Puedes leerlo en Inglés y en Español. No me gusta usar banderas de país para distinguir idiomas así que voy a usar el icono universal de traductor con un color y el código ISO de dos dígitos para representar los idiomas. El Español siempre va a ser representado por un color morado pastel.
+**ES** icono-traducción](https://github.com/ValKiriann/ACNH-telegram-bot-helper/wiki/images/extensible-markup-language-purple.png) Este README se ha escrito en dos idiomas. Puedes leerlo en Inglés y en Español. No me gusta usar banderas de país para distinguir idiomas así que voy a usar el icono universal de traductor con un color y el código ISO de dos dígitos para representar los idiomas. El Español siempre va a ser representado por un color morado pastel.
 
 ## Description | Descripción
 
