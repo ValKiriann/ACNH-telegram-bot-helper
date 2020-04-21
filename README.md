@@ -1,6 +1,7 @@
+# ACNH-telegram-bot-helper
+
 <img align="center" src="http://www.thecourieronline.co.uk/wp-content/uploads/2017/11/Tom-Nook-Courier.jpg" alt="fondo de pantalla tom nook"> 
 
-# ACNH-telegram-bot-helper
 **EN** ![translation-icon](https://github.com/ValKiriann/ACNH-telegram-bot-helper/wiki/images/extensible-markup-language-blue.png) This README was writen in two languages. You can read it in English or in Spanish. I dont like the country flag distinctive to represent languages. Instead, a combination of the universal icon of translation with a color with the two digit ISO code would represent the language. English would always be represented here with pastel blue.
 
 **ES** ![icono-traducción](https://github.com/ValKiriann/ACNH-telegram-bot-helper/wiki/images/extensible-markup-language-purple.png) Este README se ha escrito en dos idiomas. Puedes leerlo en Inglés y en Español. No me gusta usar banderas de país para distinguir idiomas así que voy a usar el icono universal de traductor con un color y el código ISO de dos dígitos para representar los idiomas. El Español siempre va a ser representado por un color morado pastel.
@@ -63,28 +64,53 @@ El Bot permite registrar usuarios que se encuentren dentro de un grupo de Telegr
 
 ## Installation | Instalación
 **EN** ![translation-icon](https://github.com/ValKiriann/ACNH-telegram-bot-helper/wiki/images/extensible-markup-language-blue.png)   
+1. Create a new bot for Telegram [(Link)](https://core.telegram.org/bots#6-botfather)  
+2. Clone this repository  
+3. install all the dependencies  
+```
+npm i
+```
+4. Rename .env-example to .env and fill the variables:
+```
+TELEGRAM_BOT_TOKEN= ---> Your bots token   
+AWS_ACCESS_KEY_ID= --> Your aws access key id  
+AWS_SECRET_ACCESS_KEY= --> Your aws secret access key   
+TIMEZONE= --> This variable helps to adjust the timezone between the server and your country. You should put here the number of the hour difference to get a proper calculation of the turnip sell turns. (12pm is the switch between morning and evening). You can add or subtract with a - sign before the number   
+PRICES_TABLE= --> Name of your prices table   
+USERS_TABLE= --> Name of your users table    
+DYNAMODB_URL= --> The url of the Dynamodb endpoint, if you are in eu-west region it would be https://dynamodb.eu-west-1.amazonaws.com  
+GROUP_ID= --> The Group id of the telegram group chat where the bot and your users are going to be. I added a console.log to the register command so you can execute it in the group and it would return you the group ID in the terminal of the app execution. You should see something like this: (in spanish)
+```
+![terminal-console.log-group-id](https://github.com/ValKiriann/ACNH-telegram-bot-helper/wiki/images/terminal-find-groupId.png)  
+5. Start the bot launching the NodeJs app
+```
+node index.js
+```
+If everything is OK you can start talking with your bot.   
+The users need to register chatting with the bot in private. Once a user is registered, the commands can be launched in private or in the group, whoever the bot would always reply in private, thats why the user needs to interact at least one time with the bot in private, otherwise the bot wont be able to initiate a chat with the user.  
+
 
 **ES** ![icono-traducción](https://github.com/ValKiriann/ACNH-telegram-bot-helper/wiki/images/extensible-markup-language-purple.png)    
 
-1. Crea un nuevo Bot para telegram
+1. Crea un nuevo Bot para telegram [(Link)](https://core.telegram.org/bots#6-botfather)
 2. Clonar el repositorio
 3. Instalación de dependencias
 ```
 npm i
 ```
-3. Renombra el archivo .env-example a .env y llénalo con tus valores: 
+4. Renombra el archivo .env-example a .env y llénalo con tus valores: 
 ```
-TELEGRAM_BOT_TOKEN= ---> la token de tu bot de telegram  
-AWS_ACCESS_KEY_ID= --> access key id de aws  
+TELEGRAM_BOT_TOKEN= ---> La token de tu bot de telegram  
+AWS_ACCESS_KEY_ID= --> Access key id de aws  
 AWS_SECRET_ACCESS_KEY= --> Secret access Key de aws  
 TIMEZONE= --> Esta variable ayuda a corregir el uso horario del servidor donde despliegues la app con tu hora local para poder hacer la distinción de turnos de venta. (hasta las 12 am el de mañana y posteriormente el de la tarde) Pon aquí el número que haya que sumar (o con un - delante para restar) a la hora local del servidor y así poder tener una sincronización con tu hora local  
 PRICES_TABLE= --> Nombre de la tabla prices  
-USERS_TABLE= --> nombre de la tabla users  
-DYNAMODB_URL= --> url de dynamodb, si tienes las tablas en irlanda es https://dynamodb.eu-west-1.amazonaws.com
-GROUP_ID= -- el ID del grupo de telegram en el que va a estar tu bot y tus usuarios. He añadido un console.log al comando de /registro para que si lo ejecutas desde el grupo en la terminal donde lances el bot aparezca este mensaje:
+USERS_TABLE= --> Nombre de la tabla users  
+DYNAMODB_URL= --> url de dynamodb, si tienes las tablas en irlanda es https://dynamodb.eu-west-1.amazonaws.com   
+GROUP_ID= --> El ID del grupo de telegram en el que va a estar tu bot y tus usuarios. He añadido un console.log al comando de /registro para que si lo ejecutas desde el grupo en la terminal donde lances el bot aparezca este mensaje:
 ```
 ![terminal-console.log-group-id](https://github.com/ValKiriann/ACNH-telegram-bot-helper/wiki/images/terminal-find-groupId.png)  
-4. Enciende el bot lanzando la app en NodeJs
+5. Enciende el bot lanzando la app en NodeJs
 ```
 node index.js
 ```
