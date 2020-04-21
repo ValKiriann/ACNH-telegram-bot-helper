@@ -26,6 +26,9 @@ bot.onText(template.commands.sellPrice, function(msg){
     let date = dateFormat(new Date(), "dd/mm/yyyy");
     return usersService.getUser(userId)
         .then((userData) => {
+            if(new Date().getDay() == 0) {
+                throw {"errorTitle": "is_sunday", "errorMessage": template.errors.is_sunday};
+            }
             amount = Number(textService.cleanCommand(msg.text));
             if(!Number.isInteger(amount)){
                 throw {"errorTitle": "invalid data", "errorMessage": template.errors.invalid_data};
@@ -120,6 +123,9 @@ bot.onText(template.commands.purchasePrice, function(msg){
 
     return usersService.getUser(userId)
         .then((userData) => {
+            if(new Date().getDay() != 0) {
+                throw {"errorTitle": "not sunday", "errorMessage": template.errors.not_sunday};
+            }
             amount = Number(textService.cleanCommand(msg.text));
             if(!Number.isInteger(amount)){
                 throw {"errorTitle": "invalid data", "error_data": template.errors.invalid_data};
@@ -214,8 +220,9 @@ bot.onText(template.commands.help, function(msg){
 bot.onText(template.commands.register, function(msg){
     const chatId = msg.chat.id;
     const userId = msg.from.id;
+    console.log(`Si has lanzado este comando desde el chat grupal, el groupId es: ${chatId}`)
     if(chatId != userId) {
-        throw {"errorTitle": "access_denied", "errorMessage": template.errors.access_denied};
+        throw {"errorTitle": "register_private", "errorMessage": template.errors.register_private};
     }
     bot.getChatMember(groupId, chatId)
         .then((chatMember) => {

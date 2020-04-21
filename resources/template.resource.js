@@ -25,9 +25,10 @@ exports.errors = {
     "purchasePriceError": "Hubo un error al añadir el precio de compra",
     "purchaseListError": "Lo lamento, hubo un error al pedir la lista",
     "helpError": "Lo lamento, hubo un error al pedir la  de comandos",
-    "access_denied": "Lo siento, para registrarte tienes que hablarme por privado",
+    "access_denied": "Debes estar registrado para poder usar comandos. Escríbeme /registro por privado",
     "membership_required": "Lo siento, sólo los miembros del club selecto pueden registrarse",
-    "registerError": "Lo siento, hubo un error al crearte el usuario"
+    "registerError": "Lo siento, hubo un error al crearte el usuario",
+    "register_private": "Lo siento, para registrarte tienes que hablarme por privado"
 }
 
 exports.sellPriceResponse = (amount, turn) => {
