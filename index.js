@@ -134,7 +134,7 @@ bot.onText(template.commands.purchasePrice, function(msg){
             let params = {
                 "date": dateFormat(today, "dd/mm/yyyy"),
                 "timestamp": +new Date,
-                "chat_id": chatId,
+                "chat_id": userId,
                 "purchase": amount
             }
             return dynamodbService.put(params, pricesTable)
