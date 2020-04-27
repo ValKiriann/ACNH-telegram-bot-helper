@@ -1,0 +1,27 @@
+name: testing-deployment
+on:
+  push:
+    branches:
+      - ci-trial
+
+env:
+  ACNH_ENV: ${{ secrets.env_trial}}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploying trough pm2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.deployment_host }}
+          username: ${{ secrets.deployment_user }}
+          key: ${{ secrets.deployment_key }}
+          port: ${{ secrets.deployment_port }}
+          script: |
+            cd /opt/ACNH-telegram-bot-helper
+            git pull
+            echo $ACNH_ENV > .env
+            pm2 restart ACNH-bot-production --update-env
+            sleep 3
+            pm2 status
+          
