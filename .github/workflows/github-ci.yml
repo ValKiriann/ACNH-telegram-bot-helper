@@ -1,20 +1,27 @@
-name: Hello World CI !!
-# This workflow is triggered on pushes to the repository.
-on: [push]
+name: testing-deployment
+on:
+  push:
+    branches:
+      - master
 
+env:
+  ACNH_ENV: ${{ secrets.env_trial}}
 jobs:
   build:
-    # Job name is Greeting
-    name: Greeting
-    # This job runs on Linux
     runs-on: ubuntu-latest
     steps:
-      # This step uses GitHub's hello-world-javascript-action: https://github.com/actions/hello-world-javascript-action
-      - name: Hello world
-        uses: actions/hello-world-javascript-action@v1
+      - name: Deploying trough pm2
+        uses: appleboy/ssh-action@master
         with:
-          who-to-greet: 'Mona the Octocat'
-        id: hello
-      # This step prints an output (time) from the previous step's action.
-      - name: Echo the greeting's time
-        run: echo 'The time was ${{ steps.hello.outputs.time }}.'
+          host: ${{ secrets.deployment_host }}
+          username: ${{ secrets.deployment_user }}
+          key: ${{ secrets.deployment_key }}
+          port: ${{ secrets.deployment_port }}
+          script: |
+            cd /opt/ACNH-telegram-bot-helper
+            git pull
+            echo $ACNH_ENV > .env
+            pm2 restart ACNH-bot-production --update-env
+            sleep 3
+            pm2 status
+          
