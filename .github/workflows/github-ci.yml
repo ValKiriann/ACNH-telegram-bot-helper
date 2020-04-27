@@ -1,4 +1,4 @@
-name: testing-deployment
+name: Production Deployment
 on:
   push:
     branches:
