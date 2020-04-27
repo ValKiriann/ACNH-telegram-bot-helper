@@ -2,7 +2,7 @@ name: testing-deployment
 on:
   push:
     branches:
-      - master
+      - ci-trial
 
 env:
   ACNH_ENV: ${{ secrets.env_trial}}
