@@ -17,6 +17,7 @@ jobs:
           username: ${{ secrets.deployment_user }}
           key: ${{ secrets.deployment_key }}
           port: ${{ secrets.deployment_port }}
+          envs: ACNH_ENV
           script: |
             cd /opt/ACNH-telegram-bot-helper
             git pull
