@@ -5,7 +5,7 @@ on:
       - master
 
 env:
-  ACNH_ENV: ${{ secrets.env_trial}}
+  ACNH_ENV: ${{ secrets.env_trial }}
 jobs:
   build:
     runs-on: ubuntu-latest
