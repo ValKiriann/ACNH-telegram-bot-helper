@@ -5,7 +5,7 @@ on:
       - ci-debug
 
 env:
-  ACNH_ENV: ${{ secrets.tester_print_var }}
+  ACNH_ENV: ${{ secrets.env_trial }}
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -21,7 +21,7 @@ jobs:
           script: |
             cd /opt/ACNH-telegram-bot-helper
             git pull
-            echo -e "$ACNH_ENV" > .trial_env
+            echo -e "$ACNH_ENV" > .env
             pm2 status
             pm2 restart ACNH-bot-production --update-env --time
             sleep 3
