@@ -21,8 +21,7 @@ jobs:
           script: |
             cd /opt/ACNH-telegram-bot-helper
             git pull
-            echo $ACNH_ENV
-            echo $ACNH_ENV > .trial_env
+            echo -e "$ACNH_ENV" > .trial_env
             pm2 status
             pm2 restart ACNH-bot-production --update-env --time
             sleep 3
