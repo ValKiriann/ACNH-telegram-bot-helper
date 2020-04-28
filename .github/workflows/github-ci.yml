@@ -2,10 +2,10 @@ name: Production Deployment
 on:
   push:
     branches:
-      - master
+      - ci-debug
 
 env:
-  ACNH_ENV: ${{ secrets.env_trial }}
+  ACNH_ENV: ${{ secrets.tester_print_var }}
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -20,8 +20,11 @@ jobs:
           script: |
             cd /opt/ACNH-telegram-bot-helper
             git pull
-            echo $ACNH_ENV > .env
-            pm2 restart ACNH-bot-production --update-env
+            echo $ACNH_ENV
+            echo $ACNH_ENV > .trial_env
+            pm2 status
+            pm2 restart ACNH-bot-production --update-env --time
             sleep 3
             pm2 status
+            pm2 logs ACNH-bot-production --err --nostream --timestamp
           
